@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <input type="text" id="target" value="https://google.com/">
+    <button onclick="startAttack()">実行</button>
+    <div id="logs" style="background:#000; color:#0f0; height:300px; overflow-y:scroll; font-family:monospace;"></div>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8000/ws");
+        ws.onmessage = (event) => {
+            document.getElementById('logs').innerHTML += event.data + "<br>";
+        };
+        function startAttack() {
+            const url = document.getElementById('target').value;
+            ws.send(url);
+        }
+    </script>
+</body>
+</html>
