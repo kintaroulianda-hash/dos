@@ -15,9 +15,9 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
         url = await websocket.receive_text()
-        await websocket.send_text(f"攻撃開始: {url}")
-        # 攻撃実行
-        results = await start_attack(url, count=100)
-        # 結果をログに返す
+        await websocket.send_text(f"Initiating attack on: {url}")
+        
+        
+        results = await start_attack(url, count=50)
         for res in results:
             await websocket.send_text(res)
