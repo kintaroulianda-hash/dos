@@ -4,7 +4,9 @@ import socks
 from aiohttp_socks import ProxyConnector
 
 
-connector = ProxyConnector.from_url('socks5://127.0.0.1:9050')
+def get_connector():
+    return ProxyConnector.from_url('socks5://127.0.0.1:9050')
+
 
 async def flood(url, semaphore):
     async with semaphore:
