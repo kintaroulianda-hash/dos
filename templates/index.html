@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { background: #0d0d0d; color: #00ff41; font-family: 'Courier New', monospace; padding: 20px; }
+        #log { background: #000; border: 1px solid #333; height: 300px; overflow-y: scroll; padding: 10px; margin-top: 10px; }
+        input { background: #1a1a1a; color: #00ff41; border: 1px solid #00ff41; padding: 10px; width: 300px; }
+        button { background: #00ff41; color: #000; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
 <body>
-    <input type="text" id="target" value="https://google.com/">
-    <button onclick="startAttack()">実行</button>
-    <div id="logs" style="background:#000; color:#0f0; height:300px; overflow-y:scroll; font-family:monospace;"></div>
+    <h2>TARGET SYSTEM V1.0</h2>
+    <input type="text" id="target" placeholder="http://example.com">
+    <button onclick="send()">EXECUTE</button>
+    <div id="log"></div>
 
     <script>
-        const ws = new WebSocket("ws://localhost:8000/ws");
-        ws.onmessage = (event) => {
-            document.getElementById('logs').innerHTML += event.data + "<br>";
+        const ws = new WebSocket("ws://" + window.location.host + "/ws");
+        ws.onmessage = function(event) {
+            const log = document.getElementById('log');
+            log.innerHTML += `<div>[>] ${event.data}</div>`;
+            log.scrollTop = log.scrollHeight;
         };
-        function startAttack() {
+        function send() {
             const url = document.getElementById('target').value;
             ws.send(url);
         }
