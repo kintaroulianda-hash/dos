@@ -15,8 +15,7 @@
     <button onclick="send()">EXECUTE</button>
     <div id="log"></div>
 
-    <script>
-        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    <script>        const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
 const ws = new WebSocket(protocol + window.location.host + "/ws");
         ws.onmessage = function(event) {
             const log = document.getElementById('log');
